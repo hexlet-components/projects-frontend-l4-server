@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+  head
+    title= Title
+    script.
+      var gon = !{JSON.stringify(gon)};
+  body
+    nav.navbar.navbar-expand-lg.navbar-light.bg-faded
+      a.navbar-brand(href="/") Chat
+      button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
+        span.navbar-toggler-icon
+      .collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link(href="/") Home
+    .container
+      #chat
+      // block content
+    script(src='/assets/vendor.js')
+    script(src='/assets/application.js')
