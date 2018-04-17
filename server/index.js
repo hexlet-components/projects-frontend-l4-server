@@ -16,7 +16,7 @@ import session from 'koa-generic-session';
 import _ from 'lodash';
 import addRoutes from './routes';
 
-import getWebpackConfig from '../webpack.config.babel';
+import webpackConfig from '../webpack.config';
 
 export default () => {
   const app = new Koa();
@@ -26,7 +26,7 @@ export default () => {
   app.use(bodyParser());
   // app.use(serve(path.join(__dirname, '..', 'public')));
   app.use(middleware({
-    config: getWebpackConfig(),
+    config: webpackConfig,
   }));
 
   const router = new Router();
