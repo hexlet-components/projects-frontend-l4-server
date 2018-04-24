@@ -1,7 +1,12 @@
 {
   "presets": [
-    "@babel/env",
-    "@babel/stage-0",
-    "@babel/react"
+    "@babel/preset-env",
+    [
+      "@babel/preset-stage-0",
+      {
+        "decoratorsLegacy": true
+      }
+    ],
+    "@babel/preset-react"
   ]
 }
