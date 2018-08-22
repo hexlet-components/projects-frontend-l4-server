@@ -10,16 +10,9 @@
     "node": "9"
   },
   "scripts": {
-    "nodemon": "nodemon",
     "test": "jest",
-    "babel-node": "babel-node",
-    "flow": "flow",
-    "flow-typed": "flow-typed",
-    "start": "babel-node ./src/bin/slack.js",
-    "eslint": "eslint",
-    "webpack": "webpack",
     "build-server": "babel server --out-dir dist --source-maps inline",
-    "build-app": "npm run webpack -- -p --env production",
+    "build-app": "npx webpack -p --env production",
     "build": "npm run build-app && npm run build-server",
     "postinstall": "npm run build"
   },
