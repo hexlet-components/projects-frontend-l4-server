@@ -10,16 +10,9 @@
     "node": "9"
   },
   "scripts": {
-    "nodemon": "nodemon",
     "test": "jest",
-    "babel-node": "babel-node",
-    "flow": "flow",
-    "flow-typed": "flow-typed",
-    "start": "babel-node ./src/bin/slack.js",
-    "eslint": "eslint",
-    "webpack": "webpack",
     "build-server": "babel server --out-dir dist --source-maps inline",
-    "build-app": "npm run webpack -- -p --env production",
+    "build-app": "npx webpack -p --env production",
     "build": "npm run build-app && npm run build-server",
     "postinstall": "npm run build"
   },
@@ -76,13 +69,16 @@
     "webpack-cli": "^2.0.15"
   },
   "devDependencies": {
+    "babel-core": "^7.0.0-0",
     "babel-eslint": "^8.2.3",
     "babel-jest": "^22.4.3",
-    "babel-core": "^7.0.0-0",
     "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^2.46.3",
     "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jest": "^21.21.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
     "flow-bin": "^0.63.1",
     "flow-typed": "^2.4.0",
     "jest": "^22.4.3",
