@@ -24,7 +24,9 @@ export default () => {
   // app.use(serve(path.join(__dirname, '..', 'public')));
   koaWebpack({
     config: webpackConfig,
-  }).then(app.use);
+  }).then((middleware) => {
+    app.use(middleware);
+  });
 
   const router = new Router();
 
