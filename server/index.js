@@ -5,6 +5,8 @@ import Koa from 'koa';
 import Pug from 'koa-pug';
 import socket from 'socket.io';
 import http from 'http';
+import mount from 'koa-mount';
+import serve from 'koa-static';
 import Router from 'koa-router';
 import koaLogger from 'koa-logger';
 import koaWebpack from 'koa-webpack';
@@ -15,6 +17,9 @@ import addRoutes from './routes';
 
 import webpackConfig from '../webpack.config';
 
+const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = !isProduction;
+
 export default () => {
   const app = new Koa();
 
@@ -22,11 +27,17 @@ export default () => {
   app.use(session(app));
   app.use(bodyParser());
   // app.use(serve(path.join(__dirname, '..', 'public')));
-  koaWebpack({
-    config: webpackConfig,
-  }).then((middleware) => {
-    app.use(middleware);
-  });
+  if (isDevelopment) {
+    koaWebpack({
+      config: webpackConfig,
+    }).then((middleware) => {
+      app.use(middleware);
+    });
+  } else {
+    const urlPrefix = '/assets';
+    const assetsPath = path.resolve(`${__dirname}/../dist/public`);
+    app.use(mount(urlPrefix, serve(assetsPath)));
+  }
 
   const router = new Router();
 
