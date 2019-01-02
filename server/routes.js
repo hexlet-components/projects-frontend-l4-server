@@ -75,7 +75,7 @@ export default (router, io) => {
     .get('/channels/:channelId/messages', (ctx) => {
       const messages = state.messages.filter(m => m.channelId === Number(ctx.params.channelId));
       const resources = messages.map(m => ({
-        type: 'channels',
+        type: 'messages',
         id: m.id,
         attributes: m,
       }));
