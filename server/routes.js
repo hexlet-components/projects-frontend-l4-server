@@ -73,7 +73,7 @@ export default (router, io) => {
       io.emit('renameChannel', data);
     })
     .get('/channels/:channelId/messages', (ctx) => {
-      const messages = state.messages.filter(m => m.channelId === ctx.params.channelId);
+      const messages = state.messages.filter(m => m.channelId === Number(ctx.params.channelId));
       const resources = messages.map(m => ({
         type: 'channels',
         id: m.id,
