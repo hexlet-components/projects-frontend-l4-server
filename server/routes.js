@@ -20,7 +20,7 @@ export default (router, io) => {
   const apiRouter = new Router();
   apiRouter
     .get('/channels', (ctx) => {
-      ctx.body = Object.values(state.channels);
+      ctx.body = state.channels;
       ctx.status = 301;
     })
     .post('/channels', (ctx) => {
