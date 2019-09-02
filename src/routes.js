@@ -1,5 +1,5 @@
 const host = '';
-const prefix = '/api/v1';
+const prefix = 'api/v1';
 
 export default {
   channelsPath: () => [host, prefix, 'channels'].join('/'),
