@@ -21,7 +21,6 @@ export default (router, io) => {
   apiRouter
     .get('/channels', (ctx) => {
       ctx.body = state.channels;
-      ctx.status = 301;
     })
     .post('/channels', (ctx) => {
       const { data: { attributes: { name } } } = ctx.request.body;
