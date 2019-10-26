@@ -1,12 +1,11 @@
 import _ from 'lodash';
-import Router from 'koa-router';
 
 const getNextId = () => Number(_.uniqueId());
 
-export default (router, io) => {
+const buildState = (defaultState) => {
   const generalChannelId = getNextId();
   const randomChannelId = getNextId();
-  const defaultState = {
+  const state = {
     channels: [
       { id: generalChannelId, name: 'general', removable: false },
       { id: randomChannelId, name: 'random', removable: false },
@@ -15,22 +14,46 @@ export default (router, io) => {
     currentChannelId: generalChannelId,
   };
 
-  const state = { ...defaultState };
+  if (defaultState.messages) {
+    state.messages.push(...defaultState.messages);
+  }
+  if (defaultState.channels) {
+    state.channels.push(...defaultState.channels);
+  }
+  if (state.currentChannelId) {
+    state.currentChannelId = defaultState.currentChannelId;
+  }
 
-  const apiRouter = new Router();
-  apiRouter
-    .get('/channels', (ctx) => {
-      ctx.body = state.channels;
+  return state;
+};
+
+export default (app, io, defaultState = {}) => {
+  const state = buildState(defaultState);
+
+  app
+    .get('/', (_req, reply) => {
+      reply.view('index.pug', { gon: state });
     })
-    .post('/channels', (ctx) => {
-      const { data: { attributes: { name } } } = ctx.request.body;
+    .get('/api/v1/channels', (_req, reply) => {
+      const resources = state.channels.map((c) => ({
+        type: 'channels',
+        id: c.id,
+        attributes: c,
+      }));
+      const response = {
+        data: resources,
+      };
+      reply.send(response);
+    })
+    .post('/api/v1/channels', (req, reply) => {
+      const { data: { attributes: { name } } } = req.body;
       const channel = {
         name,
         removable: true,
         id: getNextId(),
       };
       state.channels.push(channel);
-      ctx.status = 201;
+      reply.code(201);
       const data = {
         data: {
           type: 'channels',
@@ -38,30 +61,32 @@ export default (router, io) => {
           attributes: channel,
         },
       };
-      ctx.body = data;
 
+      reply.send(data);
       io.emit('newChannel', data);
     })
-    .delete('/channels/:id', (ctx) => {
-      const channelId = Number(ctx.params.id);
-      state.channels = state.channels.filter(c => c.id !== channelId);
-      state.messages = state.messages.filter(m => m.channelId !== channelId);
-      ctx.status = 204;
+    .delete('/api/v1/channels/:id', (req, reply) => {
+      const channelId = Number(req.params.id);
+      state.channels = state.channels.filter((c) => c.id !== channelId);
+      state.messages = state.messages.filter((m) => m.channelId !== channelId);
+      reply.code(204);
       const data = {
         data: {
           type: 'channels',
           id: channelId,
         },
       };
+
+      reply.send(data);
       io.emit('removeChannel', data);
     })
-    .patch('/channels/:id', (ctx) => {
-      const channelId = Number(ctx.params.id);
-      const channel = state.channels.find(c => c.id === channelId);
+    .patch('/api/v1/channels/:id', (req, reply) => {
+      const channelId = Number(req.params.id);
+      const channel = state.channels.find((c) => c.id === channelId);
 
-      const { attributes } = ctx.request.body.data;
+      const { data: { attributes } } = req.body;
       channel.name = attributes.name;
-      ctx.status = 204;
+
       const data = {
         data: {
           type: 'channels',
@@ -69,26 +94,30 @@ export default (router, io) => {
           attributes: channel,
         },
       };
+      reply.send(data);
       io.emit('renameChannel', data);
     })
-    .get('/channels/:channelId/messages', (ctx) => {
-      const messages = state.messages.filter(m => m.channelId === Number(ctx.params.channelId));
-      const resources = messages.map(m => ({
+    .get('/api/v1/channels/:channelId/messages', (req, reply) => {
+      const messages = state.messages.filter((m) => m.channelId === Number(req.params.channelId));
+      const resources = messages.map((m) => ({
         type: 'messages',
         id: m.id,
         attributes: m,
       }));
-      ctx.body = resources;
+      const response = {
+        data: resources,
+      };
+      reply.send(response);
     })
-    .post('/channels/:channelId/messages', (ctx) => {
-      const { data: { attributes } } = ctx.request.body;
+    .post('/api/v1/channels/:channelId/messages', (req, reply) => {
+      const { data: { attributes } } = req.body;
       const message = {
         ...attributes,
-        channelId: Number(ctx.params.channelId),
+        channelId: Number(req.params.channelId),
         id: getNextId(),
       };
       state.messages.push(message);
-      ctx.status = 201;
+      reply.code(201);
       const data = {
         data: {
           type: 'messages',
@@ -96,13 +125,7 @@ export default (router, io) => {
           attributes: message,
         },
       };
-      ctx.body = data;
+      reply.send(data);
       io.emit('newMessage', data);
     });
-
-  return router
-    .get('root', '/', (ctx) => {
-      ctx.render('index', { gon: state });
-    })
-    .use('/api/v1', apiRouter.routes(), apiRouter.allowedMethods());
 };
