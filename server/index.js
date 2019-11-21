@@ -30,7 +30,7 @@ const setUpViews = (app) => {
 const setUpStaticAssets = (app) => {
   // log('static', urlPrefix, assetsPath);
   app.register(fastifyStatic, {
-    // root: path.join(ideRootPath, 'dist'),
+    root: path.resolve(`${__dirname}/../dist/public`),
     prefix: '/assets',
   });
 };
@@ -40,7 +40,7 @@ export default (state = {}) => {
 
   // app.keys = ['some secret hurr'];
   setUpViews(app);
-  // setUpStaticAssets(app);
+  setUpStaticAssets(app);
 
   // app.use(session(app));
   // app.use(bodyParser());
