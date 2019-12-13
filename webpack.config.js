@@ -1,3 +1,9 @@
+// @ts-check
+
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = !isProduction;
+
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
   entry: [
@@ -13,6 +19,9 @@ module.exports = {
     path: `${__dirname}/dist/public`,
     publicPath: '/assets/',
   },
+  plugins: [
+    new MiniCssExtractPlugin(),
+  ],
   module: {
     rules: [
       {
@@ -22,7 +31,34 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              reloadAll: true,
+              sourceMap: isDevelopment,
+              hmr: isDevelopment,
+            },
+          },
+          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: isDevelopment } },
+          { loader: 'postcss-loader', options: { sourceMap: isDevelopment } },
+        ],
+      },
+      {
+        test: /\.(scss|sass)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              reloadAll: true,
+              sourceMap: isDevelopment,
+              hmr: isDevelopment,
+            },
+          },
+          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: isDevelopment } },
+          { loader: 'postcss-loader', options: { sourceMap: isDevelopment } },
+          { loader: 'sass-loader', options: { sourceMap: isDevelopment } },
+        ],
       },
     ],
   },
