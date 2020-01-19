@@ -1,5 +1,8 @@
 // @ts-check
 
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import path from 'path';
 import Pug from 'pug';
 import socket from 'socket.io';
