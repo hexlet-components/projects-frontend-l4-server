@@ -22,7 +22,7 @@ const buildState = (defaultState) => {
   if (defaultState.channels) {
     state.channels.push(...defaultState.channels);
   }
-  if (state.currentChannelId) {
+  if (defaultState.currentChannelId) {
     state.currentChannelId = defaultState.currentChannelId;
   }
 
