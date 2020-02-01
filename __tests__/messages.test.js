@@ -14,7 +14,7 @@ test('get /channels/:id/messages', async () => {
       { id: 1, channelId: 100, body: 'hey custom' },
     ],
   };
-  const app = buildApp(state);
+  const app = buildApp({ state });
   const response = await app.inject({
     url: buildUrl('channels/100/messages'),
   });
