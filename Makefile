@@ -17,7 +17,7 @@ build:
 	npm run build
 
 test:
-	npm test
+	npm test -s
 
 lint:
 	npx eslint . --ext js,jsx
