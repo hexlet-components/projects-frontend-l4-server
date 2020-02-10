@@ -1,7 +1,7 @@
 import buildApp from '../server';
 
 test('get /', async () => {
-  const app = buildApp();
+  const app = buildApp({ port: 5000 });
   const response = await app.inject({
     url: '/',
   });

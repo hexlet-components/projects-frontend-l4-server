@@ -6,7 +6,7 @@ import buildApp from '../server';
 const buildUrl = (url) => path.join('/api/v1/', url);
 
 test('get /channels', async () => {
-  const app = buildApp();
+  const app = buildApp({ port: 5000 });
   const response = await app.inject({
     url: buildUrl('channels'),
   });
@@ -43,7 +43,7 @@ test('post /channels', async () => {
       },
     },
   };
-  const app = buildApp();
+  const app = buildApp({ port: 5000 });
   const response = await app.inject({
     method: 'POST',
     url: buildUrl('channels'),
@@ -70,7 +70,7 @@ test('delete /channels/:id', async () => {
       { id: 100, name: 'custom', removable: true },
     ],
   };
-  const app = buildApp(state);
+  const app = buildApp({ state });
   const response = await app.inject({
     method: 'DELETE',
     url: buildUrl('channels/100'),
@@ -85,7 +85,7 @@ test('patch /channels/:id', async () => {
     ],
   };
 
-  const app = buildApp(state);
+  const app = buildApp({ state });
 
   const payload = {
     data: {
