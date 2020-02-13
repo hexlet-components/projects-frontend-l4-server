@@ -1,8 +1,9 @@
 // @ts-check
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
-const isDevelopment = !isProduction;
+// const isDevelopment = !isProduction;
+console.log('isProduction', isProduction);
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
@@ -20,7 +21,7 @@ module.exports = {
     publicPath: '/assets/',
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    // new MiniCssExtractPlugin(),
   ],
   module: {
     rules: [
@@ -30,34 +31,12 @@ module.exports = {
         use: 'babel-loader',
       },
       {
-        test: /\.css$/,
+        test: /\.s[ac]ss$/i,
         use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              reloadAll: true,
-              sourceMap: isDevelopment,
-              hmr: isDevelopment,
-            },
-          },
-          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: isDevelopment } },
-          { loader: 'postcss-loader', options: { sourceMap: isDevelopment } },
-        ],
-      },
-      {
-        test: /\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              reloadAll: true,
-              sourceMap: isDevelopment,
-              hmr: isDevelopment,
-            },
-          },
-          { loader: 'css-loader', options: { importLoaders: 1, sourceMap: isDevelopment } },
-          { loader: 'postcss-loader', options: { sourceMap: isDevelopment } },
-          { loader: 'sass-loader', options: { sourceMap: isDevelopment } },
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'postcss-loader' },
+          { loader: 'sass-loader' },
         ],
       },
     ],

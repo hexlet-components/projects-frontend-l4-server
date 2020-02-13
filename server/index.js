@@ -16,8 +16,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 const appPath = path.join(__dirname, '..');
 const isDevelopment = !isProduction;
 
-const setUpViews = (app, options) => {
-  const domain = isDevelopment ? `http://localhost:8080` : '';
+const setUpViews = (app) => {
+  const domain = isDevelopment ? 'http://localhost:8080' : '';
   app.register(pointOfView, {
     engine: {
       pug: Pug,

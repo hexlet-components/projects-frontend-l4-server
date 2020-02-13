@@ -1,16 +1,20 @@
 doctype html
-html(lang="en")
+html.h-100(lang="en")
   head
     title= Title
-    link(rel="stylesheet" href=assetPath('main.css'))
+    // script(src=assetPath('main.css'))
     script.
       var gon = !{JSON.stringify(gon)};
-  body
+  body.d-flex.flex-column.h-100
     nav.navbar.navbar-expand-lg.navbar-light.bg-faded
       a.navbar-brand(href="/") Chat
       button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
         span.navbar-toggler-icon
-    .container
-      #chat
+      .collapse.navbar-collapse
+        ul.navbar-nav.mr-auto
+          li.nav-item.active
+            a.nav-link(href="/") Home
+    .container.h-100.overflow-hidden
+      .h-100#chat
       // block content
     script(src=assetPath('main.js'))
