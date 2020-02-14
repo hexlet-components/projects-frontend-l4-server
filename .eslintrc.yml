@@ -12,7 +12,9 @@ env:
   jest: true
 
 settings:
-  import/resolver: webpack
+  import/resolver:
+    - node
+    - webpack
 
 rules:
   import/extensions: 0
