@@ -39,7 +39,7 @@ const setUpStaticAssets = (app) => {
 export default (options) => {
   const app = fastify();
 
-  setUpViews(app, options);
+  setUpViews(app);
   setUpStaticAssets(app);
 
   const io = socket(app.server);
