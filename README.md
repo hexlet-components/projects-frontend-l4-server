@@ -14,4 +14,5 @@ $ make install
 
 ```sh
 $ make start
+# open http://localhost:5000
 ```
