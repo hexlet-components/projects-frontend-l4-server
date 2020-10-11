@@ -1,7 +1,7 @@
 // @ts-check
 
 import path from 'path';
-import buildApp from '../server';
+import buildApp from '../server/index.js';
 
 const buildUrl = (url) => path.join('/api/v1/', url);
 
