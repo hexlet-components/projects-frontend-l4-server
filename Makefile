@@ -10,7 +10,7 @@ start-frontend:
 	npx webpack serve
 
 install-deps:
-	npm install
+	npm ci
 
 build:
 	rm -rf dist
