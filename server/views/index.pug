@@ -2,7 +2,7 @@ doctype html
 html.h-100(lang="en")
   head
     title= Title
-    // script(src=assetPath('main.css'))
+    link(href=assetPath('main.css') rel="stylesheet")
     script.
       var gon = !{JSON.stringify(gon)};
   body.d-flex.flex-column.h-100
