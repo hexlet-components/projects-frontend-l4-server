@@ -14,7 +14,7 @@
     "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views",
     "build-app": "npx webpack --env production",
     "build": "npm run build-app && npm run build-server",
-    "start": "dist/bin/slack.js",
+    "start": "make start-backend",
     "postinstall": "npm run build"
   },
   "repository": {
