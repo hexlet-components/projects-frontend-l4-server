@@ -1,9 +1,8 @@
 // @ts-check
 
-import path from 'path';
 import buildApp from '../server/index.js';
 
-const buildUrl = (url) => path.join('/api/v1/', url);
+const buildUrl = (url) => `/api/v1/${url}`;
 
 test('get /channels/:id/messages', async () => {
   const state = {
