@@ -1,11 +1,9 @@
 // @ts-check
 
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import 'core-js/stable/index.js';
+import 'regenerator-runtime/runtime.js';
 
 import '../assets/application.scss';
-
-import gon from 'gon';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -31,4 +29,3 @@ const container = document.querySelector('#chat');
 container.append(card);
 
 console.log('it works!');
-console.log('gon', gon);

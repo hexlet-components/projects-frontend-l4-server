@@ -3,9 +3,7 @@ html.h-100(lang="en")
   head
     title= Title
     link(href=assetPath('main.css') rel="stylesheet")
-    script.
-      var gon = !{JSON.stringify(gon)};
-  body.d-flex.flex-column.h-100
-    .container.h-100.overflow-hidden.p-3
+  body.h-100
+    .container-lg.h-100.p-3
       .h-100#chat
     script(src=assetPath('main.js'))

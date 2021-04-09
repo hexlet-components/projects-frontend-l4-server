@@ -1,6 +1,9 @@
 // @ts-check
 
 import _ from 'lodash';
+import HttpErrors from 'http-errors';
+
+const { Unauthorized, Conflict } = HttpErrors;
 
 const getNextId = () => Number(_.uniqueId());
 
@@ -14,6 +17,9 @@ const buildState = (defaultState) => {
     ],
     messages: [],
     currentChannelId: generalChannelId,
+    users: [
+      { id: 1, username: 'admin', password: 'admin' },
+    ],
   };
 
   if (defaultState.messages) {
@@ -25,109 +31,110 @@ const buildState = (defaultState) => {
   if (defaultState.currentChannelId) {
     state.currentChannelId = defaultState.currentChannelId;
   }
+  if (defaultState.users) {
+    state.users.push(...defaultState.users);
+  }
 
   return state;
 };
 
-export default (app, io, defaultState = {}) => {
+export default (app, defaultState = {}) => {
   const state = buildState(defaultState);
 
-  app
-    .get('/', (_req, reply) => {
-      reply.view('index.pug', { gon: state });
-    })
-    .get('/api/v1/channels', (_req, reply) => {
-      const resources = state.channels.map((c) => ({
-        type: 'channels',
-        id: c.id,
-        attributes: c,
-      }));
-      const response = {
-        data: resources,
+  app.io.on('connect', (socket) => {
+    console.log({ 'socket.id': socket.id });
+
+    socket.on('newMessage', (message, acknowledge) => {
+      const messageWithId = {
+        ...message,
+        id: getNextId(),
       };
-      reply.send(response);
-    })
-    .post('/api/v1/channels', (req, reply) => {
-      const { data: { attributes: { name } } } = req.body;
-      const channel = {
-        name,
+      state.messages.push(messageWithId);
+      acknowledge({ status: 'ok' });
+      app.io.emit('newMessage', messageWithId);
+    });
+
+    socket.on('newChannel', (channel, acknowledge) => {
+      const channelWithId = {
+        ...channel,
         removable: true,
         id: getNextId(),
       };
-      state.channels.push(channel);
-      reply.code(201);
-      const data = {
-        data: {
-          type: 'channels',
-          id: channel.id,
-          attributes: channel,
-        },
-      };
 
-      reply.send(data);
-      io.emit('newChannel', data);
-    })
-    .delete('/api/v1/channels/:id', (req, reply) => {
-      const channelId = Number(req.params.id);
+      state.channels.push(channelWithId);
+      acknowledge({ status: 'ok', data: channelWithId });
+      app.io.emit('newChannel', channelWithId);
+    });
+
+    socket.on('removeChannel', ({ id }, acknowledge) => {
+      const channelId = Number(id);
       state.channels = state.channels.filter((c) => c.id !== channelId);
       state.messages = state.messages.filter((m) => m.channelId !== channelId);
-      reply.code(204);
-      const data = {
-        data: {
-          type: 'channels',
-          id: channelId,
-        },
-      };
+      const data = { id: channelId };
 
-      reply.send(data);
-      io.emit('removeChannel', data);
-    })
-    .patch('/api/v1/channels/:id', (req, reply) => {
-      const channelId = Number(req.params.id);
+      acknowledge({ status: 'ok' });
+      app.io.emit('removeChannel', data);
+    });
+
+    socket.on('renameChannel', ({ id, name }, acknowledge) => {
+      const channelId = Number(id);
       const channel = state.channels.find((c) => c.id === channelId);
+      if (!channel) return;
+      channel.name = name;
 
-      const { data: { attributes } } = req.body;
-      channel.name = attributes.name;
+      acknowledge({ status: 'ok' });
+      app.io.emit('renameChannel', channel);
+    });
+  });
 
-      const data = {
-        data: {
-          type: 'channels',
-          id: channelId,
-          attributes: channel,
-        },
-      };
-      reply.send(data);
-      io.emit('renameChannel', data);
-    })
-    .get('/api/v1/channels/:channelId/messages', (req, reply) => {
-      const messages = state.messages.filter((m) => m.channelId === Number(req.params.channelId));
-      const resources = messages.map((m) => ({
-        type: 'messages',
-        id: m.id,
-        attributes: m,
-      }));
-      const response = {
-        data: resources,
-      };
-      reply.send(response);
-    })
-    .post('/api/v1/channels/:channelId/messages', (req, reply) => {
-      const { data: { attributes } } = req.body;
-      const message = {
-        ...attributes,
-        channelId: Number(req.params.channelId),
-        id: getNextId(),
-      };
-      state.messages.push(message);
-      reply.code(201);
-      const data = {
-        data: {
-          type: 'messages',
-          id: message.id,
-          attributes: message,
-        },
-      };
-      reply.send(data);
-      io.emit('newMessage', data);
+  app.post('/api/v1/login', async (req, reply) => {
+    const username = _.get(req, 'body.username');
+    const password = _.get(req, 'body.password');
+    const user = state.users.find((u) => u.username === username);
+
+    if (!user || user.password !== password) {
+      reply.send(new Unauthorized());
+      return;
+    }
+
+    const token = app.jwt.sign({ userId: user.id });
+    reply.send({ token, username });
+  });
+
+  app.post('/api/v1/signup', async (req, reply) => {
+    const username = _.get(req, 'body.username');
+    const password = _.get(req, 'body.password');
+    const user = state.users.find((u) => u.username === username);
+
+    if (user) {
+      reply.send(new Conflict());
+      return;
+    }
+
+    const newUser = { id: getNextId(), username, password };
+    const token = app.jwt.sign({ userId: newUser.id });
+    state.users.push(newUser);
+    reply
+      .code(201)
+      .header('Content-Type', 'application/json; charset=utf-8')
+      .send({ token, username });
+  });
+
+  app.get('/api/v1/data', { preValidation: [app.authenticate] }, (req, reply) => {
+    const user = state.users.find(({ id }) => id === req.user.userId);
+
+    if (!user) {
+      reply.send(new Unauthorized());
+      return;
+    }
+
+    reply
+      .header('Content-Type', 'application/json; charset=utf-8')
+      .send(_.omit(state, 'users'));
+  });
+
+  app
+    .get('*', (_req, reply) => {
+      reply.view('index.pug');
     });
 };
