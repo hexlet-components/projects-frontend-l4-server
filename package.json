@@ -8,6 +8,7 @@
     "node": ">= 14"
   },
   "scripts": {
+    "test": "echo 'no tests for this project'",
     "prebuild": "rm -rf dist",
     "build": "NODE_ENV=production npx webpack --mode production",
     "start": "node bin/slack.js"
