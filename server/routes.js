@@ -44,7 +44,7 @@ export default (app, defaultState = {}) => {
   app.io.on('connect', (socket) => {
     console.log({ 'socket.id': socket.id });
 
-    socket.on('newMessage', (message, acknowledge) => {
+    socket.on('newMessage', (message, acknowledge = _.noop) => {
       const messageWithId = {
         ...message,
         id: getNextId(),
@@ -54,7 +54,7 @@ export default (app, defaultState = {}) => {
       app.io.emit('newMessage', messageWithId);
     });
 
-    socket.on('newChannel', (channel, acknowledge) => {
+    socket.on('newChannel', (channel, acknowledge = _.noop) => {
       const channelWithId = {
         ...channel,
         removable: true,
@@ -66,7 +66,7 @@ export default (app, defaultState = {}) => {
       app.io.emit('newChannel', channelWithId);
     });
 
-    socket.on('removeChannel', ({ id }, acknowledge) => {
+    socket.on('removeChannel', ({ id }, acknowledge = _.noop) => {
       const channelId = Number(id);
       state.channels = state.channels.filter((c) => c.id !== channelId);
       state.messages = state.messages.filter((m) => m.channelId !== channelId);
@@ -76,7 +76,7 @@ export default (app, defaultState = {}) => {
       app.io.emit('removeChannel', data);
     });
 
-    socket.on('renameChannel', ({ id, name }, acknowledge) => {
+    socket.on('renameChannel', ({ id, name }, acknowledge = _.noop) => {
       const channelId = Number(id);
       const channel = state.channels.find((c) => c.id === channelId);
       if (!channel) return;
