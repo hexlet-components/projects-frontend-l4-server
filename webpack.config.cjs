@@ -16,9 +16,9 @@ module.exports = {
   },
   devServer: {
     compress: true,
-    port: 8080,
+    port: 8090,
     host: '0.0.0.0',
-    publicPath: '/assets/',
+    // publicPath: '/assets/',
     historyApiFallback: true,
   },
   plugins: [

@@ -1,7 +1,10 @@
-import buildApp from '../server/index.js';
+import fastify from 'fastify';
+
+import init from '../server/plugin.js';
 
 test('get /', async () => {
-  const app = buildApp({ port: 5000 });
+  const app = fastify();
+  await init(app);
   const response = await app.inject({
     url: '/',
   });

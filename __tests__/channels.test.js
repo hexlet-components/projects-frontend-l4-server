@@ -1,12 +1,14 @@
 // @ts-check
 
+import fastify from 'fastify';
 // TODO rewrite tests
-import buildApp from '../server/index.js';
+import init from '../server/plugin.js';
 
 const buildUrl = (url) => `/api/v1/${url}`;
 
 test('get /channels', async () => {
-  const app = buildApp({ port: 5000 });
+  app = fastify();
+  init(app);
   const response = await app.inject({
     url: buildUrl('channels'),
   });
@@ -43,7 +45,8 @@ test('post /channels', async () => {
       },
     },
   };
-  const app = buildApp({ port: 5000 });
+  const app = fastify();
+  await init(app);
   const response = await app.inject({
     method: 'POST',
     url: buildUrl('channels'),
@@ -70,7 +73,8 @@ test('delete /channels/:id', async () => {
       { id: 100, name: 'custom', removable: true },
     ],
   };
-  const app = buildApp({ state });
+  const app = fastify();
+  await init(app, { state });
   const response = await app.inject({
     method: 'DELETE',
     url: buildUrl('channels/100'),
@@ -85,7 +89,8 @@ test('patch /channels/:id', async () => {
     ],
   };
 
-  const app = buildApp({ state });
+  const app = fastify();
+  await init(app, { state });
 
   const payload = {
     data: {

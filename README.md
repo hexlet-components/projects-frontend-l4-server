@@ -16,7 +16,7 @@ $ make install
 
 ```sh
 $ make start
-# open http://localhost:5000
+# open http://localhost:5555
 ```
 
 [![Hexlet Ltd. logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://ru.hexlet.io/pages/about?utm_source=github&utm_medium=link&utm_campaign=project-frontend-l4-server)

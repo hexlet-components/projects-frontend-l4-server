@@ -24,7 +24,7 @@ const appPath = path.join(__dirname, '..');
 const isDevelopment = !isProduction;
 
 const setUpViews = (app) => {
-  const devHost = 'http://localhost:8080';
+  const devHost = 'http://localhost:8090';
   const domain = isDevelopment ? devHost : '';
   app.register(pointOfView, {
     engine: {
@@ -59,9 +59,7 @@ const setUpAuth = (app) => {
     });
 };
 
-export default async (options) => {
-  const app = fastify({ logger: { prettyPrint: true } });
-
+export default async (app, options) => {
   setUpAuth(app);
   setUpViews(app);
   setUpStaticAssets(app);

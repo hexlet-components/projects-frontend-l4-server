@@ -1,6 +1,7 @@
 // @ts-check
 
-import buildApp from '../server/index.js';
+import fastify from 'fastify';
+import init from '../server/plugin.js';
 
 const buildUrl = (url) => `/api/v1/${url}`;
 
@@ -13,7 +14,8 @@ test('get /channels/:id/messages', async () => {
       { id: 1, channelId: 100, body: 'hey custom' },
     ],
   };
-  const app = buildApp({ state });
+  const app = fastify();
+  await init(app, { state });
   const response = await app.inject({
     url: buildUrl('channels/100/messages'),
   });
@@ -45,7 +47,8 @@ test('post /channels/:id/messages', async () => {
     ],
   };
 
-  const app = buildApp({ state });
+  const app = fastify();
+  await init(app, { state });
 
   const payload = {
     data: {

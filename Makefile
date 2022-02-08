@@ -4,7 +4,7 @@ start:
 	heroku local -f Procfile.dev
 
 start-backend:
-	npx nodemon bin/slack.js
+	PORT=5555 npm start -- --verbose-watch
 
 start-frontend:
 	npx webpack serve
