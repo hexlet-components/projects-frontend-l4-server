@@ -3,7 +3,6 @@
 import Pug from 'pug';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fastify from 'fastify';
 import pointOfView from 'point-of-view';
 import fastifySocketIo from 'fastify-socket.io';
 import fastifyStatic from 'fastify-static';

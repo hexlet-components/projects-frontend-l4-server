@@ -1,5 +1,6 @@
 // @ts-check
 
+import { test, expect } from '@jest/globals';
 import fastify from 'fastify';
 // TODO rewrite tests
 import init from '../server/plugin.js';
@@ -7,7 +8,7 @@ import init from '../server/plugin.js';
 const buildUrl = (url) => `/api/v1/${url}`;
 
 test('get /channels', async () => {
-  app = fastify();
+  const app = fastify();
   init(app);
   const response = await app.inject({
     url: buildUrl('channels'),

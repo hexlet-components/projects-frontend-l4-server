@@ -10,7 +10,10 @@ extends:
   - "plugin:functional/external-recommended"
   - "plugin:functional/recommended"
 
-parser: babel-eslint
+parser: "@babel/eslint-parser"
+
+parserOptions:
+  ecmaVersion: latest
 
 env:
   browser: true

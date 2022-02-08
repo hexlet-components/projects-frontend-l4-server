@@ -1,6 +1,8 @@
 // @ts-check
 
 import fastify from 'fastify';
+import { test, expect } from '@jest/globals';
+
 import init from '../server/plugin.js';
 
 const buildUrl = (url) => `/api/v1/${url}`;
