@@ -4,7 +4,7 @@ start:
 	heroku local -f Procfile.dev
 
 start-backend:
-	PORT=5555 npm start -- --verbose-watch
+	PORT=5555 npm start
 
 start-frontend:
 	npx webpack serve
