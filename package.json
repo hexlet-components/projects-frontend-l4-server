@@ -2,12 +2,12 @@
   "name": "frontend_l4_chat_project",
   "version": "0.0.1",
   "description": "",
-  "main": "server/index.js",
+  "main": "server/plugin.js",
   "type": "module",
   "scripts": {
     "test": "jest",
     "prebuild": "rm -rf dist",
-    "build": "NODE_ENV=production npx webpack --mode production",
+    "build": "webpack",
     "start": "fastify start server/plugin.js -l info -P"
   },
   "jest": {
@@ -46,7 +46,6 @@
     "@babel/core": "^7.17.2",
     "@babel/eslint-parser": "^7.17.0",
     "@babel/node": "^7.16.8",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@jest/globals": "^27.5.1",
