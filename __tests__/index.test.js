@@ -4,7 +4,7 @@ import { test, expect } from '@jest/globals';
 import init from '../server/plugin.js';
 
 test('get /', async () => {
-  const app = fastify();
+  const app = fastify({ logger: { prettyPrint: true } });
   await init(app, { state: {} });
   const response = await app.inject({
     url: '/',
