@@ -11,8 +11,8 @@ RUN npm ci
 
 COPY . .
 
-RUN npm test -s
+RUN make check
 ENV NODE_ENV=production
-RUN npm run build
+RUN make build
 
 CMD ["npm", "start"]
