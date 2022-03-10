@@ -27,6 +27,4 @@ deploy:
 test:
 	npm test -s
 
-check: test lint
-
 .PHONY: test

@@ -1,4 +1,4 @@
-FROM node:16.14.0-slim
+FROM node:17-slim
 
 RUN apt-get update && apt-get install -yq make
 
@@ -11,7 +11,6 @@ RUN npm ci
 
 COPY . .
 
-RUN make check
 ENV NODE_ENV=production
 RUN make build
 
