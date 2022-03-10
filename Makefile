@@ -25,7 +25,6 @@ deploy:
 	git push heroku
 
 test:
-	NODE_OPTIONS=--experimental-vm-modules \
 	npm test -s
 
 .PHONY: test
