@@ -62,7 +62,7 @@
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "mini-css-extract-plugin": "^2.5.3",
-    "node-sass": "^7.0.1",
+    "node-sass": "^9.0.0",
     "nodemon": "^2.0.15",
     "npm-check-updates": "^16.3.18",
     "postcss-loader": "^7.2.4",
